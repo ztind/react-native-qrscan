@@ -46,9 +46,7 @@ class DefComponent extends Component{
                     underlayColor="gray"
                     style={styles.button}
                     >
-                    <View>
                         <Text style={styles.text}>扫描二维码/条形码</Text>
-                    </View>
                 </TouchableHighlight>
             </View>
         );
