@@ -1,9 +1,8 @@
 # Sample
 <img src="screenshort/qrscan.gif">
-### use
-cd react-native-qrscan <br/>
-npm install
-#### Android
+## use
+- cd react-native-qrscan <br/>
+- npm install
+-Android ios
 react-native run-android
-#### ios
 react-native run-ios
