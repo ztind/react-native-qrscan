@@ -7,7 +7,7 @@
  * 1.npm install react-native-camera@https://github.com/lwansbrough/react-native-camera.git --save
  * 2.react-native link react-native-camera
  * 注意：rn 0.44版本后移除里Navigator
- * 1.可通过以管理员身份cmd安装：npm install --save react-native-deprecated-custom-components
+ * 1.npm install --save react-native-deprecated-custom-components
  * 2.导入import {Navigator}  from 'react-native-deprecated-custom-components';
  */
 import React,{Component} from 'react';
