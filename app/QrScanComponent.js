@@ -13,6 +13,7 @@ import {
 import Camera from 'react-native-camera';
 
 export default class QrScanComponent extends Component{
+
     constructor(props){
         super(props);
         this.state={
@@ -35,13 +36,11 @@ export default class QrScanComponent extends Component{
     }
 
     render(){
+        console.log("扫描二维码界面啦");
+        console.log(this.props.navigation);
         let contentView=(
             <View style={styles.contentView}>
-                <StatusBar
-                    translucent={true}
-                    backgroundColor="transparent"
-                    barStyle="light-content"
-                />
+
                 <View style={styles.shade}></View>
                 <View style={[{flexDirection:'row'}]}>
                     <View style={styles.shade}></View>
@@ -81,15 +80,13 @@ export default class QrScanComponent extends Component{
             data:result.data,
             type:result.type
         }
-        let navigator=this.props.navigator;
-        let getResultData=this.props.getResultData;
-        if(getResultData){
-            getResultData(resultData);//回调方法回传数据
+        let _callBack=this.props.navigation.state.params._callBack;
+        if(_callBack){
+            _callBack(resultData);//回调方法回传数据
         }
-        if(navigator){
-            navigator.pop();//退出
-        }
+        this.props.navigation.goBack();//退出
     }
+
 }
 const styles=StyleSheet.create(
     {

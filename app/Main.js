@@ -6,43 +6,34 @@
  * 安装react-native-camera：
  * 1.npm install react-native-camera@https://github.com/lwansbrough/react-native-camera.git --save
  * 2.react-native link react-native-camera
- * 注意：rn 0.44版本后移除里Navigator
- * 1.npm install --save react-native-deprecated-custom-components
- * 2.导入import {Navigator}  from 'react-native-deprecated-custom-components';
+ * 注意：rn 0.44版本后移除里Navigator。此处采用新的导航器进行页面切换 react-navigation ,自动处理Android的back返回
+ * 1.npm install react-navigation --save
+ * 2.导入import {StackNavigator}  from 'react-navigation';
  */
 import React,{Component} from 'react';
 import {
     StyleSheet,View,Text,
     TouchableHighlight,
+    StatusBar,
     ToastAndroid,BackAndroid,Alert
     } from 'react-native';
-import {Navigator} from 'react-native-deprecated-custom-components';
+import {StackNavigator}  from 'react-navigation';
 import QrScanComponent from './QrScanComponent.js';
-export default class Main extends Component{
-    render(){
-        let defaultName="DefComponent";
-        let defaultComponent=DefComponent;
-        return(
-            <Navigator
-                initialRoute={{name:defaultName,component:defaultComponent}}
-                renderScene={
-                    (route,navigator)=>{
-                     let Component=route.component;
-                     return <Component {...route.params} navigator={navigator}/>;
-                    }
-                }
-                />
-        );
-    }
-}
-class DefComponent extends Component{
+
+class Main extends Component{
 
     render(){
         return (
             <View style={styles.container}>
+
+                <StatusBar
+                    translucent={true}
+                    backgroundColor="transparent"
+                    barStyle="light-content"
+                    />
                 <Text style={styles.title}>二维码/条形码扫描demo</Text>
                 <TouchableHighlight
-                    onPress={this._buttonClick.bind(this)}
+                    onPress={this._buttonClick}
                     underlayColor="gray"
                     style={styles.button}
                     >
@@ -52,30 +43,20 @@ class DefComponent extends Component{
         );
     }
 
-    _buttonClick(){
-        let navigator=this.props.navigator;
-
-        if(navigator!==null){
-            navigator.push(
-                {
-                    name:'QrScanComponent',
-                    component:QrScanComponent,
-                    params:{
-                        getResultData:function(result){
-                            let message="type: "+result.type+"\n"+"data: "+result.data;
-                            Alert.alert('扫描结果',message,
-                                [
-                                    {text:'取消',onPress:() => {}},
-                                    {text:'确定',onPress:() => {}}
-                                ]);
-                        }
-                    }
-                }
-            );
-        }
+    _callBack = (result)=>{
+        let message="type: "+result.type+"\n"+"data: "+result.data;
+        Alert.alert('扫描结果',message,
+            [
+                {text:'取消',onPress:() => {}},
+                {text:'确定',onPress:() => {}}
+            ]);
+    }
+    _buttonClick = ()=>{
+        this.props.navigation.navigate("QrScanComponent",{_callBack:this._callBack});
     }
 
-    //***********************Android Back*************************
+    //***********************Android Back**************************
+
     //组件安装完
     componentDidMount(){
         BackAndroid.addEventListener('androidBack', this._customAlertHandleBack.bind(this));
@@ -84,24 +65,16 @@ class DefComponent extends Component{
     componentWillUnmount(){
         BackAndroid.removeEventListener('androidBack', this._customAlertHandleBack.bind(this));
     }
+
     _customAlertHandleBack(){
-        let navigator=this.props.navigator;
-        if(navigator!==null){
-            let routes=navigator.getCurrentRoutes();//获取路由数组
-            if(routes.length>1){
-                const top=routes[routes.length-1];
-                //直接退出此层
-                navigator.pop();
-                return true;
-            }else{
-                //2s内按back退出
-                if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
-                    return false;
-                }
-                this.lastBackPressed = Date.now();
-                ToastAndroid.show('再按一次退出应用',ToastAndroid.SHORT);
-                return true;
+        if(this.props.navigation.state.routeName === "home"){
+            //2s内按back退出
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                return false;
             }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用',ToastAndroid.SHORT);
+            return true;
         }
     }
 }
@@ -123,11 +96,23 @@ const styles=StyleSheet.create(
             color:'red',
             fontSize:15,
             textAlign:'center',
-            marginTop:10
+            marginTop:15
         },
         text:{
             textAlign:'center',
-            color:'white',
+            color:'white'
         }
     }
 );
+const  Root = StackNavigator(
+    {
+        home:{screen:Main},
+        QrScanComponent:{screen:QrScanComponent}
+    },
+    {
+        navigationOptions:{
+            header:null
+        }
+    }
+);
+export default Root;

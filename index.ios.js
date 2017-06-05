@@ -8,10 +8,10 @@ import React, { Component } from 'react';
 import {
     AppRegistry,
     } from 'react-native';
-import Main from './app/Main.js';
+import Root from './app/Main.js';
 export default class qrscan extends Component {
   render() {
-    return <Main/>;
+    return <Root/>;
   }
 }
 
