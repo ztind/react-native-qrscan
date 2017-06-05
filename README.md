@@ -5,7 +5,8 @@
 - git clone https://github.com/ztind/react-native-qrscan.git 
 - cd react-native-qrscan
 - npm install
-- react-native run-android or react-native run-ios
+- npm start
+- react-native run-android (or) react-native run-ios
 
 
 
