@@ -7,7 +7,8 @@ import {
     Platform,
     Vibration,
     Animated,
-    Easing
+    Easing,
+    StatusBar
     } from 'react-native';
 import Camera from 'react-native-camera';
 
@@ -36,6 +37,11 @@ export default class QrScanComponent extends Component{
     render(){
         let contentView=(
             <View style={styles.contentView}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor="transparent"
+                    barStyle="light-content"
+                />
                 <View style={styles.shade}></View>
                 <View style={[{flexDirection:'row'}]}>
                     <View style={styles.shade}></View>
